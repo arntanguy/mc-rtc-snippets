@@ -1,0 +1,8 @@
+{
+  "mc-rtc-state":
+  {
+    "prefix": "mc-rtc-state",
+    "body": ["struct ${1:StateName}", "{", "\t$0", "};"],
+    "description": "Code snippet for a FSM State"
+  }
+}
