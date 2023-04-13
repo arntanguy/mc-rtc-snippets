@@ -1,8 +1,107 @@
 {
-  "mc-rtc-state":
+  "mc-rtc-state-def":
   {
-    "prefix": "mc-rtc-state",
-    "body": ["struct ${1:StateName}", "{", "\t$0", "};"],
-    "description": "Code snippet for a FSM State"
+    "prefix": "mc-rtc-state-def",
+    "description": "[def] Code snippet for a FSM State",
+    "body": [
+      "#pragma once\n\n",
+      "#include <mc_control/fsm/State.h>\n\n",
+      "struct ${1:StateName}",
+      "{",
+        "\tvoid start(mc_control::fsm::Controller & ctl) override;",
+        "\tbool run(mc_control::fsm::Controller & ctl) override;",
+        "\tvoid teardown(mc_control::fsm::Controller & ctl) override;",
+        "};\n"]
+  },
+  "mc-rtc-state-impl":
+  {
+    "prefix": "mc-rtc-state-impl",
+    "description": "[impl] Code snippet for a FSM State",
+    "body": [
+      "#include <${1:StateName}.h>\n",
+      "void ${1:StateName}::start(mc_control::fsm::Controller & ctl)",
+      "{",
+        "output(\"OK\");",
+      "}\n",
+      "bool ${1:StateName}::run(mc_control::fsm::Controller & ctl)",
+      "{",
+        "return true;",
+      "}\n",
+      "void ${1:StateName}::teardown(mc_control::fsm::Controller & ctl)",
+      "{",
+      "}\n",
+      "EXPORT_SINGLE_STATE(\"${1:StateName}\", ${1:StateName})\n"
+    ]
+  },
+  "mc-rtc-observer-def":
+  {
+    "prefix": "mc-rtc-observer-def",
+    "description": "[def] Code snippet for an Observer",
+    "body": [
+      "#pragma once\n",
+      "#include <mc_observers/Observer.h>\n",
+      "namespace mc_control",
+      "{",
+        "struct MCController;",
+      "}",
+      "",
+      "struct ${1:ObserverName} : public mc_observers::Observer",
+      "{",
+        "\t${1:ObserverName}(const std::string & type, double dt);",
+        "",
+        "\tvoid configure(const mc_control::MCController & ctl, const mc_rtc::Configuration &) override;",
+        "\tvoid reset(const mc_control::MCController & ctl) override;",
+        "\tbool run(const mc_control::MCController & ctl) override;",
+        "\tvoid update(mc_control::MCController & ctl) override;",
+        "",
+        "protected:",
+          "\tvoid addToLogger(const mc_control::MCController &, mc_rtc::Logger &, const std::string & category) override;",
+          "\tvoid removeFromLogger(mc_rtc::Logger &, const std::string & category) override;",
+          "\tvoid addToGUI(const mc_control::MCController &, mc_rtc::gui::StateBuilder &, const std::vector<std::string> & /* category */) override;",
+      "};"
+    ]
+  },
+  "mc-rtc-observer-impl":
+  {
+    "prefix": "mc-rtc-observer-impl",
+    "description": "[impl] Code snippet for an Observer",
+    "body": [
+      "#include <mc_control/MCController.h>",
+      "#include <${1:ObserverName}.h>",
+      "",
+      "${1:ObserverName}::${1:ObserverName}(const std::string & type, double dt) : mc_observers::Observer(type, dt) {}",
+      "",
+      "void ${1:ObserverName}::configure(const mc_control::MCController & ctl, const mc_rtc::Configuration & config)",
+      "{",
+      "}",
+      "",
+      "void ${1:ObserverName}::reset(const mc_control::MCController & ctl)",
+      "{",
+      "\trun(ctl);",
+      "}",
+      "",
+      "bool ${1:ObserverName}::run(const mc_control::MCController &)",
+      "{",
+      "\treturn true;",
+      "}",
+      "",
+      "void ${1:ObserverName}::update(mc_control::MCController & ctl)",
+      "{",
+      "}",
+      "",
+      "void ${1:ObserverName}::addToLogger(const mc_control::MCController &, mc_rtc::Logger & logger, const std::string & category)",
+      "{",
+      "}",
+      "",
+      "void ${1:ObserverName}::removeFromLogger(mc_rtc::Logger & logger, const std::string & category)",
+      "{",
+      "}",
+      "",
+      "void ${1:ObserverName}::addToGUI(const mc_control::MCController & ctl,",
+      "                             mc_rtc::gui::StateBuilder & gui,",
+      "                             const std::vector<std::string> & category)",
+      "{",
+      "}"
+    ]
   }
 }
